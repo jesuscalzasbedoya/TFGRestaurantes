@@ -23,7 +23,21 @@ def nombreAmigos():
             nombres.append(useraux.name)
     else:
         print("No tienes amigos")
-    return nombres    
+    return nombres
+
+def buscarUsuarios(lista):
+    listaUsers = []
+    for u in lista:
+        contador = 0
+        encontrado = False
+        while (encontrado == False):
+            if(u == user.listaUsuarios[contador].name):
+                listaUsers.append(user.listaUsuarios[contador])
+                encontrado = True
+            else:
+                contador += 1
+    return listaUsers
+        
 
 def SeleccionarAmigos():
     amigosSeleccionados = []
@@ -82,7 +96,7 @@ def repetirRecomendacion():
 idCorrecto = False
 while(idCorrecto == False):
     print("Introduce tu userId: ")
-    idUsuario = input()
+    idUsuario = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
     user = Usuario(idUsuario, session)
     if(user.existeUsuario() == False):
         print("El id introducido es erroneo")
@@ -96,7 +110,8 @@ while (elegir == True):
     seleccionados=[]
     while(len(seleccionados)==0 and len(user.friends)>0):
         seleccionados = SeleccionarAmigos()
-    seleccionados.append(user.user_id)
+    listaGrupo = buscarUsuarios(seleccionados)
+    listaGrupo.append(user)
     #Seleccionar el estado
     ciudad = ""
     while (len(ciudad)==0): 
@@ -110,12 +125,11 @@ while (elegir == True):
 
     #Generar recomendación
 
-    grupo = Grupo(seleccionados, session)
-
+    grupo = Grupo(listaGrupo, session)
+    
     
 
-
-    algoritmo.jaccard(grupo)
+    #algoritmo.jaccard(grupo)
 
     elegir = repetirRecomendacion()
     

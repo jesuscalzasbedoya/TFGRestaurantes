@@ -1,5 +1,6 @@
 from neo4j import GraphDatabase
 from Usuario import Usuario
+from UsuarioAux import UsuarioAux
 #Conexion a la base de datos
 
 url = "bolt://localhost:7687"
@@ -54,19 +55,18 @@ else:
         print (w)
     print(len(amigos))
 """
+"""
 
+lista = [0, 1, 2, 3, 4, 5, 6, 7, 8]
+i = 0
+n = 2
+for x in lista:
+    if (i == 2):
+        lista.pop (6)
+    print(lista[i])
+    i+=1
 
-
-query = "MATCH (r:Restaurante{business_id:'" + restauranteId + "'}) RETURN r.name"
-result = session.run(query)
-if (result.peek() is None):
-    name = None
-else:
-    for i in result:
-        i = str(i)
-        name = i[16:-2]
-print(name)
-
+"""
 
 """
 query = "MATCH (u:Usuario{user_id:'" + userId + "'}) RETURN u.name"
@@ -94,4 +94,6 @@ lista.sort()
 print("Longitud: ", len(lista), " --> ", lista)
 """
 
+x = UsuarioAux("yAslAaF6zzqgfV5xwye3jQ", session)
+print (x.listaReviews)
 session.close()

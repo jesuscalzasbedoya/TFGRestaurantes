@@ -8,7 +8,8 @@ class Usuario:
         self.name = self.getName(self.user_id)
         self.friends = self.getAmigos(self.user_id)
         self.listaReviews = self.getReviews(self.user_id)
-        self.valoracionMedia = self.getValoracionMedia()
+        #self.valoracionMedia = self.getValoracionMedia()
+        self.listaUsuarios = self.getUsuarios()
         
         """
         for r in "" :     
@@ -88,7 +89,7 @@ class Usuario:
     def getReviews(self, userId):
         reviews = []
         if(self.name != None):
-            query = "MATCH (u:Usuario{auxId: '" + userId + "'})-[:Escribe]->(r) return r.review_id"
+            query = "MATCH (u:Usuario{user_id: '" + userId + "'})-[:Escribe]->(r) return r.review_id"
             resultado = self.session.run(query)
             if (resultado.peek() is None):
                 pass
@@ -120,3 +121,10 @@ class Usuario:
         print(self.friends)
         print(self.user_id)
         print(self.valoracionMedia)
+    
+    def getUsuarios(self):
+        usuarios = []
+        for u in self.friends:
+            aux = UsuarioAux(u, self.session)
+            usuarios.append(aux)
+        return usuarios

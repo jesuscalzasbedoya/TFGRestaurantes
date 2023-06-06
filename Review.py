@@ -1,15 +1,15 @@
 class Review:
     
-    def __init__(self, reviewId, session):
-        self.review_id = reviewId
+    def __init__(self, review_id, session):
+        self.review_id = review_id
         self.session = session
         self.user_id = self.getUserId(self.review_id) 
-        self.restaurante_id = self.getRestauranteId(self.reviewId) 
-        self.stars = self.getStars(self.reviewId)
+        self.restaurante_id = self.getRestauranteId(self.review_id) 
+        self.stars = self.getStars(self.review_id)
 
     #Obtener review.user_id de la BBDD
-    def getUserId(self, reviewId):
-        query = "MATCH (r:Review{review_id:'" + reviewId + "'}) RETURN r.user_id"
+    def getUserId(self, review_id):
+        query = "MATCH (r:Review{review_id:'" + review_id + "'}) RETURN r.user_id"
         result = self.session.run(query)
         if (result.peek() is None):
             userid = None
@@ -20,8 +20,8 @@ class Review:
         return userid
 
     #Obtener review.user_id de la BBDD
-    def getRestauranteId(self, reviewId):
-        query = "MATCH (r:Review{review_id:'" + reviewId + "'}) RETURN r.business_id"
+    def getRestauranteId(self, review_id):
+        query = "MATCH (r:Review{review_id:'" + review_id + "'}) RETURN r.business_id"
         result = self.session.run(query)
         if (result.peek() is None):
             restauranteid = None
@@ -32,8 +32,8 @@ class Review:
         return restauranteid
 
     #Obtener review.business_id de la BBDD
-    def getStars(self, reviewId):
-        query = "MATCH (r:Review{review_id:'" + reviewId + "'}) RETURN r.stars"
+    def getStars(self, review_id):
+        query = "MATCH (r:Review{review_id:'" + review_id + "'}) RETURN r.stars"
         result = self.session.run(query)
         if (result.peek() is None):
             stars = None

@@ -52,7 +52,6 @@ class Grupo:
             indice += 1
         valoracionAux += lista[indice1].stars
         lista[indice1].stars = (valoracionAux/rep)
-        #self.listaFinal.append[lista[indice1]]
         return lista
 
 

@@ -5,7 +5,7 @@ class Algoritmo:
     def __init__(self):
         pass
 
-    def similitud(grupo, usuario):
+    def similitud(self, grupo, usuario):
         arriba = 0
         abajo1 = 0
         abajo2 = 0
@@ -24,15 +24,15 @@ class Algoritmo:
 
         return arriba/abajo1
 
-    def prediccion(grupo, usuario, restaurante, similitud):
+    def prediccion(self, grupo, usuario, restaurante, similitud):
         p = similitud * (usuario.getValoracion(restaurante) - usuario.valoracionMedia)
         return grupo.mediaValoracciones + p
 
-    def jaccard(grupo, usuario):
+    def jaccard(self,grupo, usuario):
         iguales = 0
-        total = len(grupo.listaReviews) + len(usuario.listaReviews)
-        for r in grupo.listaReviews:
-            if (usuario.perteneceReview(r)):
+        total = len(grupo.listaFinal) + len(usuario.listaReviews)
+        for r in grupo.listaFinal:
+            if (usuario.restauranteReseniado(r.restaurante_id)):
                 iguales += 1
         total = total - iguales
         return iguales/total

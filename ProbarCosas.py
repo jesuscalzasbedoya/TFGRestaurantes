@@ -1,6 +1,8 @@
 from neo4j import GraphDatabase
 from Usuario import Usuario
 from UsuarioAux import UsuarioAux
+from Restaurante import Restaurante
+
 #Conexion a la base de datos
 
 url = "bolt://localhost:7687"
@@ -10,7 +12,7 @@ session = driver.session()
 
 userId = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
 reviewId = 'Sv_CnnR0FEnzXE4Xnm_RuA'
-restauranteId = 'MTSW4McQd7CbVtyjqoe9mw'
+restauranteId = 'nIAbuktMEzVjT4P9pG89rQ'
 
 """
 palabra = "abcdefghijklmnñopq"
@@ -92,8 +94,15 @@ for i in ciudades:
 lista.sort()
 
 print("Longitud: ", len(lista), " --> ", lista)
+
+
+r = Restaurante(restauranteId, session)
+print(r.listaUsuarios)
 """
 
-x = UsuarioAux("yAslAaF6zzqgfV5xwye3jQ", session)
-print (x.listaReviews)
-session.close()
+estring = "abcdefghij"
+estring = estring[2:7]
+print("estring" == "estrin")
+
+lista = [2, 4, 5 ,2 ,6 ,7]
+print(max(lista))

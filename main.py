@@ -3,6 +3,7 @@ from Algoritmos import Algoritmo
 from Usuario import Usuario
 from UsuarioAux import UsuarioAux 
 from Grupo import Grupo
+from Restaurante import Restaurante
 
 
 #Conexion a la base de datos
@@ -91,12 +92,24 @@ def repetirRecomendacion():
             valida = True
     return elegir
 
+def pertenece(grupo, usuario):
+    pertenece = False
+    i = 0
+    while ((pertenece == False) and i < len(grupo)):
+        if(grupo[i].user_id == usuario):
+            pertenece = True
+        i += 1
+    return pertenece
+
+
 #Programa
 #Introducir el id
 idCorrecto = False
 while(idCorrecto == False):
     print("Introduce tu userId: ")
+    #idUsuario = input()                                            #####################################
     idUsuario = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
+    print(idUsuario)
     user = Usuario(idUsuario, session)
     if(user.existeUsuario() == False):
         print("El id introducido es erroneo")
@@ -109,13 +122,15 @@ while (elegir == True):
     #Selecciona los amigos a los que hacer la recomendación
     seleccionados=[]
     while(len(seleccionados)==0 and len(user.friends)>0):
-        seleccionados = SeleccionarAmigos()
+        #seleccionados = SeleccionarAmigos()                        #####################################
+        seleccionados = ["Justin", "Mike"]
     listaGrupo = buscarUsuarios(seleccionados)
     listaGrupo.append(user)
     #Seleccionar el estado
     ciudad = ""
     while (len(ciudad)==0): 
-        ciudad = SeleccionarCiudad()
+        #ciudad = SeleccionarCiudad()                                      #####################################
+        ciudad = "Zionsville"
     #Hacer el seleccionador de ciudad
 
     print("Amigos seleccionados: ")
@@ -125,13 +140,42 @@ while (elegir == True):
 
     #Generar recomendación
 
+    #Crear grupo
     grupo = Grupo(listaGrupo, session)
     
+    mejoresRestaurantes =[]
+
+    for i in grupo.listaFinal:
+        r = Restaurante(i.restaurante_id, session)
+        mejoresRestaurantes.append(r)
     
 
-    #algoritmo.jaccard(grupo)
+    usuariosAfines = []
 
-    elegir = repetirRecomendacion()
+    for i in mejoresRestaurantes:
+        for j in i.listaUsuarios:
+            if(pertenece(grupo.listaUsuarios, j.user_id)==False):
+                usuariosAfines.append(j)
+
+    listaJaccard = []
+    listaJaccardFinal = []
+
+    for i in usuariosAfines:
+        listaJaccard.append(algoritmo.jaccard(grupo, i))
+
+    valMaxJaccard = max(listaJaccard)
+    
+    n = 0
+    for i in listaJaccard:
+        if (i == valMaxJaccard):
+            listaJaccardFinal.append(usuariosAfines[n])
+        n += 1
+
+
+    #Similitud
+
+    elegir = False
+    #elegir = repetirRecomendacion()                            #####################################
     
 
 session.close()

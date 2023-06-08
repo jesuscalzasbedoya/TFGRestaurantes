@@ -6,10 +6,22 @@ class Restaurante:
         self.restaurante_id = restauranteId
         self.session = session
         self.name = self.getName(self.restaurante_id)
+        self.ciudad = self.getCiudad(self.restaurante_id)
         self.listaUsuarios = self.obtenerUsuarios(self.restaurante_id)
         
     def getName(self, restauranteId):
         query = "MATCH (r:Restaurante{business_id:'" + restauranteId + "'}) RETURN r.name"
+        result = self.session.run(query)
+        if (result.peek() is None):
+            name = None
+        else:
+            for i in result:
+                i = str(i)
+                name = i[16:-2]
+        return name
+    
+    def getCiudad(self, restauranteId):
+        query = "MATCH (r:Restaurante{business_id:'" + restauranteId + "'}) RETURN r.city"
         result = self.session.run(query)
         if (result.peek() is None):
             name = None

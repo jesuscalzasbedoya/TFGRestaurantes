@@ -100,9 +100,6 @@ r = Restaurante(restauranteId, session)
 print(r.listaUsuarios)
 """
 
-estring = "abcdefghij"
-estring = estring[2:7]
-print("estring" == "estrin")
+restaurante = Restaurante(restauranteId, session)
 
-lista = [2, 4, 5 ,2 ,6 ,7]
-print(max(lista))
+print(restaurante.ciudad)

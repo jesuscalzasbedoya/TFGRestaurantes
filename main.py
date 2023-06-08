@@ -219,8 +219,9 @@ while (elegir == True):
 
     for i in listaRestaurantes:
         if (perteneceRestaurante(listaRestaurantesFinales, i) == False):
-            listaRestaurantesFinales.append(i)
-            listaValoracionesFinales.append(listaValoraciones[n])
+            if(i.ciudad == ciudad):
+                listaRestaurantesFinales.append(i)
+                listaValoracionesFinales.append(listaValoraciones[n])
         n += 1
 
     n = 0

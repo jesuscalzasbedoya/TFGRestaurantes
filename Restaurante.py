@@ -3,10 +3,10 @@ from UsuarioAux import UsuarioAux
 class Restaurante:
         
     def __init__(self, restauranteId, session):
-        self.Restaurante_id = restauranteId
+        self.restaurante_id = restauranteId
         self.session = session
-        self.name = self.getName(self.Restaurante_id)
-        self.listaUsuarios = self.obtenerUsuarios(self.Restaurante_id)
+        self.name = self.getName(self.restaurante_id)
+        self.listaUsuarios = self.obtenerUsuarios(self.restaurante_id)
         
     def getName(self, restauranteId):
         query = "MATCH (r:Restaurante{business_id:'" + restauranteId + "'}) RETURN r.name"

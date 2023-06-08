@@ -28,8 +28,11 @@ class Algoritmo:
         return arriba/abajo1
 
     def prediccion(self, grupo, usuario, restaurante, similitud):
-        p = similitud * (usuario.getValoracion(restaurante) - usuario.valoracionMedia)
-        return grupo.mediaValoracciones + p
+        valoracion = usuario.getReview(restaurante.restaurante_id).stars - usuario.valoracionMedia
+        if(valoracion == 0):
+            valoracion = 0.01
+        p = similitud * valoracion    #Que pasaria si la valoracion del restaurante y la valoracion media es la misma
+        return grupo.valoracionMedia + p
 
     def jaccard(self,grupo, usuario):
         iguales = 0

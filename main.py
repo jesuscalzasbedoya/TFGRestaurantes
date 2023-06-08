@@ -4,6 +4,7 @@ from Usuario import Usuario
 from UsuarioAux import UsuarioAux 
 from Grupo import Grupo
 from Restaurante import Restaurante
+from RestauranteAux import RestauranteAux
 
 
 #Conexion a la base de datos
@@ -92,11 +93,20 @@ def repetirRecomendacion():
             valida = True
     return elegir
 
-def pertenece(grupo, usuario):
+def perteneceUsuario(grupo, usuario):
     pertenece = False
     i = 0
     while ((pertenece == False) and i < len(grupo)):
         if(grupo[i].user_id == usuario):
+            pertenece = True
+        i += 1
+    return pertenece
+
+def perteneceRestaurante(lista, restaurante):
+    pertenece = False
+    i = 0
+    while(i<len(lista) and pertenece==False):
+        if(lista[i].restaurante_id == restaurante.restaurante_id):
             pertenece = True
         i += 1
     return pertenece
@@ -154,7 +164,7 @@ while (elegir == True):
 
     for i in mejoresRestaurantes:
         for j in i.listaUsuarios:
-            if(pertenece(grupo.listaUsuarios, j.user_id)==False):
+            if(perteneceUsuario(grupo.listaUsuarios, j.user_id)==False):
                 usuariosAfines.append(j)
 
     #######################
@@ -181,11 +191,43 @@ while (elegir == True):
     #######################
 
     similitudes = []
+    listaSimilitudesFinal = []
+
     for i in listaJaccardFinal:
         similitudes.append(algoritmo.similitud(grupo, i))
     
-    for i in similitudes:
-        print(i)
+    valMaxSimilitudes = max(similitudes)
+
+    ########################
+    #######PREDICCION#######
+    ########################
+
+    listaRestaurantes = []
+    listaValoraciones = []
+    n = 0
+
+    for i in listaJaccardFinal:
+        for j in i.listaReviewsInicializadas:
+            restaurante = RestauranteAux(j.restaurante_id, session)
+            listaRestaurantes.append(restaurante)
+            listaValoraciones.append(algoritmo.prediccion(grupo, i, restaurante, similitudes[n]))
+        n += 1
+
+    listaRestaurantesFinales = []
+    listaValoracionesFinales = []
+    n = 0
+
+    for i in listaRestaurantes:
+        if (perteneceRestaurante(listaRestaurantesFinales, i) == False):
+            listaRestaurantesFinales.append(i)
+            listaValoracionesFinales.append(listaValoraciones[n])
+        n += 1
+
+    n = 0
+    for i in listaRestaurantesFinales:
+        print(i.name, ": ", listaValoracionesFinales[n])
+        n += 1
+
     elegir = False
     #elegir = repetirRecomendacion()                            #####################################
     

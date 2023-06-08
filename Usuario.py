@@ -47,9 +47,10 @@ class Usuario:
         encontrado = False
         i = 0
         while(encontrado == False & i<len(self.listaReviews)):
-            if(self.listaReviews[i].restaurante_id.equals(restaurante_id)):
+            if(self.listaReviews[i].restaurante_id == restaurante_id):
                 encontrado = True
-            i+=1
+            else: 
+                i+=1
         return self.listaReviews[i].stars
 
     def getName(self, userId):

@@ -80,3 +80,13 @@ class UsuarioAux:
             else: 
                 i+=1
         return self.listaReviewsInicializadas[i]
+    
+    def getValoracion(self, restaurante_id):
+        encontrado = False
+        i = 0
+        while(encontrado == False & i<len(self.listaReviewsInicializadas)):
+            if(self.listaReviewsInicializadas[i].restaurante_id == restaurante_id):
+                encontrado = True
+            else: 
+                i+=1
+        return self.listaReviews[i].stars

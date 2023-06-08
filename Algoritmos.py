@@ -10,15 +10,18 @@ class Algoritmo:
         abajo1 = 0
         abajo2 = 0
 
-        for r in grupo.listareviews:
-            if (usuario.PerteneceReview(r)):
+        for r in grupo.listaFinal:
+            if (usuario.restauranteReseniado(r.restaurante_id)):
                 a = r.stars - grupo.valoracionMedia
-                b = usuario.getReview(r.review_id).stars - usuario.valoracionMedia
-
+                b = usuario.getReview(r.restaurante_id).stars - usuario.valoracionMedia    #Si las estrellas y la valoración media es la misma, se divide entre 0
+                if(a == 0):
+                    a = 0.01
+                if(b == 0):
+                    b = 0.01
                 arriba += a*b
 
                 abajo1 += pow(a,2)
-                abajo2 += b*b
+                abajo2 += pow(b,2)
         
         abajo1 = math.sqrt(abajo1)*math.sqrt(abajo2)
 

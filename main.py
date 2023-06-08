@@ -157,6 +157,10 @@ while (elegir == True):
             if(pertenece(grupo.listaUsuarios, j.user_id)==False):
                 usuariosAfines.append(j)
 
+    #######################
+    ########JACCARD########
+    #######################
+
     listaJaccard = []
     listaJaccardFinal = []
 
@@ -172,8 +176,16 @@ while (elegir == True):
         n += 1
 
 
-    #Similitud
+    #######################
+    #######SIMILITUD#######
+    #######################
 
+    similitudes = []
+    for i in listaJaccardFinal:
+        similitudes.append(algoritmo.similitud(grupo, i))
+    
+    for i in similitudes:
+        print(i)
     elegir = False
     #elegir = repetirRecomendacion()                            #####################################
     

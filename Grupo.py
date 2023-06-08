@@ -9,7 +9,7 @@ class Grupo:
         self.listaReviews = []
         self.listaFinal = []
         self.listaReviews = self.inicializarReviews()
-        self.listaFinal = self.sanearRestaurantes()
+        self.listaFinal = self.sanearRestaurantes()                 #lista final de reviews
         self.valoracionMedia = self.calcularValoracionMedia()
 
         """

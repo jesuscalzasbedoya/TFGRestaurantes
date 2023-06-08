@@ -7,6 +7,7 @@ class UsuarioAux:
         self.listaReviewsInicializadas = []
         self.name = self.getName(self.user_id)
         self.listaReviews = self.getReviews(self.user_id)
+        self.valoracionMedia = self.getValoracionMedia()
 
 
     def getName(self, userId):
@@ -60,3 +61,22 @@ class UsuarioAux:
                 pertenece = True
             i += 1
         return pertenece
+    
+    def getValoracionMedia(self):
+        valoracionTotal = 0
+        if(self.name != None):
+            for review in self.listaReviewsInicializadas:
+                valoracionTotal += review.stars
+            if (len(self.listaReviews) != 0):
+                valoracionTotal = valoracionTotal/len(self.listaReviews)
+        return valoracionTotal
+    
+    def getReview(self, restaurante_id):
+        encontrado = False
+        i = 0
+        while(encontrado == False & i<len(self.listaReviews)):
+            if(self.listaReviewsInicializadas[i].restaurante_id == restaurante_id):
+                encontrado = True
+            else: 
+                i+=1
+        return self.listaReviewsInicializadas[i]

@@ -1,14 +1,16 @@
 from UsuarioAux import UsuarioAux 
+from Review import Review
 
 class Usuario:
 
     def __init__(self, userId, session):
         self.user_id = userId
         self.session = session
+        self.listaReviewsInicializadas = []
         self.name = self.getName(self.user_id)
         self.friends = self.getAmigos(self.user_id)
         self.listaReviews = self.getReviews(self.user_id)
-        #self.valoracionMedia = self.getValoracionMedia()
+        self.valoracionMedia = self.getValoracionMedia()
         self.listaUsuarios = self.getUsuarios()
         
         """
@@ -97,13 +99,15 @@ class Usuario:
                 for i in resultado:
                     i = str(i)
                     i = i[21:-2]
+                    review = Review(i, self.session)
                     reviews.append(i)
+                    self.listaReviewsInicializadas.append(review)
         return reviews
     
     def getValoracionMedia(self):
         valoracionTotal = 0
         if(self.name != None):
-            for review in self.listaReviews:
+            for review in self.listaReviewsInicializadas:
                 valoracionTotal += review.stars
             if (len(self.listaReviews) != 0):
                 valoracionTotal = valoracionTotal/len(self.listaReviews)

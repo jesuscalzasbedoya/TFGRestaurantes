@@ -1,0 +1,17 @@
+{% extends './layout.html' %}
+
+{% block title %}{{ data.titulo }}{% endblock %}
+
+{% block body %}
+
+
+<h4>{{ data.nombre }} {{ data.direccion }} {{ data.valoracion }}</h4>
+
+
+<form  method="POST">
+    
+    <button type="submit" class="btn btn-primary">Recomiéndandos de nuevo</button>
+
+</form>
+
+{% endblock %}

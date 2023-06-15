@@ -117,9 +117,9 @@ def perteneceRestaurante(lista, restaurante):
 idCorrecto = False
 while(idCorrecto == False):
     print("Introduce tu userId: ")
-    #idUsuario = input()                                            #####################################
-    idUsuario = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
-    print(idUsuario)
+    idUsuario = input()                                            #####################################
+    #idUsuario = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
+    #print(idUsuario)
     user = Usuario(idUsuario, session)
     if(user.existeUsuario() == False):
         print("El id introducido es erroneo")
@@ -132,15 +132,15 @@ while (elegir == True):
     #Selecciona los amigos a los que hacer la recomendación
     seleccionados=[]
     while(len(seleccionados)==0 and len(user.friends)>0):
-        #seleccionados = SeleccionarAmigos()                        #####################################
-        seleccionados = ["Justin", "Mike"]
+        seleccionados = SeleccionarAmigos()                        #####################################
+        #seleccionados = ["Justin", "Mike"]
     listaGrupo = buscarUsuarios(seleccionados)
     listaGrupo.append(user)
     #Seleccionar el estado
     ciudad = ""
     while (len(ciudad)==0): 
-        #ciudad = SeleccionarCiudad()                                      #####################################
-        ciudad = "Zionsville"
+        ciudad = SeleccionarCiudad()                                      #####################################
+        #ciudad = "Zionsville"
     #Hacer el seleccionador de ciudad
 
     print("Amigos seleccionados: ")
@@ -229,8 +229,8 @@ while (elegir == True):
         print(i.name, ": ", listaValoracionesFinales[n])
         n += 1
 
-    elegir = False
-    #elegir = repetirRecomendacion()                            #####################################
+    #elegir = False
+    elegir = repetirRecomendacion()                            #####################################
     
 
 session.close()

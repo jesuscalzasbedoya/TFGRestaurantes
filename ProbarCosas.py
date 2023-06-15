@@ -10,9 +10,9 @@ driver = GraphDatabase.driver(url, auth=("neo4j", "12345678"))
 session = driver.session()
 
 
-userId = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
-reviewId = 'Sv_CnnR0FEnzXE4Xnm_RuA'
-restauranteId = 'nIAbuktMEzVjT4P9pG89rQ'
+user_id = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
+review_id = 'Sv_CnnR0FEnzXE4Xnm_RuA'
+restaurante_id = 'nIAbuktMEzVjT4P9pG89rQ'
 
 """
 palabra = "abcdefghijklmnñopq"
@@ -99,7 +99,11 @@ print("Longitud: ", len(lista), " --> ", lista)
 r = Restaurante(restauranteId, session)
 print(r.listaUsuarios)
 """
+query = "MATCH (u:Usuario{user_id: '" + user_id + "'})-[r:Reviews]->() RETURN avg(toInteger(r.stars)) as a"
+result = session.run(query)
+while result.peek():
+    record = result.__next__()
+    node = record["a"]
+    media = node
 
-restaurante = Restaurante(restauranteId, session)
-
-print(restaurante.ciudad)
+print (media)

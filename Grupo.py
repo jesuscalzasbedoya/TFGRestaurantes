@@ -6,20 +6,30 @@ class Grupo:
     def __init__(self, listaUsuarios, session):
         self.listaUsuarios = listaUsuarios
         self.session = session
-        self.listaReviews = []
-        self.listaFinal = []
-        self.listaReviews = self.inicializarReviews()
-        self.listaFinal = self.sanearRestaurantes()                 #lista final de reviews
-        self.valoracionMedia = self.calcularValoracionMedia()
+        self.valoracionMedia = self.obtenerValoracionMedia()       #Obtener valoracion media de $seed
 
-        """
-        Inicializar en un método diferente la lista de reviews
-         - Obtener todas las reviews
-         - Quitar las peores
-         - Devolver la lista saneada
-        Establecer la valoración media
-        """
-    
+
+    def obtenerValoracionMedia(self):           #Modificar
+        query = "MATCH (u:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE u.user_id in $listaUsuarios RETURN avg(rev.score) as mediaGrupo"
+        result = self.session.run(query, listaUsuarios = self.listaUsuarios)
+        record = result.single()
+        return float(record.get("mediaGrupo"))
+        
+    """   
+    def obtenerNodo(self):
+        query = "MATCH (r:Restaurante{business_id:'" + self.restaurante_id + "'}) RETURN r"
+        result = self.session.run(query)
+        record = result.single()
+        if record:
+            nodo = record["r"]
+        else:
+            nodo = None
+        return nodo
+""" 
+
+
+
+
     def inicializarReviews(self):
         lista = []
         for u in self.listaUsuarios:
@@ -84,10 +94,3 @@ class Grupo:
             contador += 1
         return lista
     
-    def calcularValoracionMedia(self):
-        valor = 0
-        for r in self.listaFinal:
-            valor += r.stars
-        if(len(self.listaFinal) != 0):
-            valor = valor/len(self.listaFinal)
-        return valor

@@ -5,44 +5,18 @@ class Restaurante:
     def __init__(self, restauranteId, session):
         self.restaurante_id = restauranteId
         self.session = session
-        self.name = self.getName(self.restaurante_id)
-        self.ciudad = self.getCiudad(self.restaurante_id)
-        self.listaUsuarios = self.obtenerUsuarios(self.restaurante_id)
-        
-    def getName(self, restauranteId):
-        query = "MATCH (r:Restaurante{business_id:'" + restauranteId + "'}) RETURN r.name"
+        restaurante = self.obtenerNodo()
+        if restaurante != None:
+            self.name = restaurante.get("name")
+            self.ciudad = restaurante.get("city")
+            self.direccion = restaurante.get("address")
+
+    def obtenerNodo(self):
+        query = "MATCH (r:Restaurante{business_id:'" + self.restaurante_id + "'}) RETURN r"
         result = self.session.run(query)
-        if (result.peek() is None):
-            name = None
+        record = result.single()
+        if record:
+            nodo = record["r"]
         else:
-            for i in result:
-                i = str(i)
-                name = i[16:-2]
-        return name
-    
-    def getCiudad(self, restauranteId):
-        query = "MATCH (r:Restaurante{business_id:'" + restauranteId + "'}) RETURN r.city"
-        result = self.session.run(query)
-        if (result.peek() is None):
-            name = None
-        else:
-            for i in result:
-                i = str(i)
-                name = i[16:-2]
-        return name
-    
-    def obtenerUsuarios(self, restaurante_id):
-        usuarios = []
-        if(self.name != None):
-            query = "MATCH (r:Review{business_id: '" + restaurante_id + "'})-[:Propietario]->(u) return r.user_id, apoc.agg.maxItems(r.stars, 5)"
-            resultado = self.session.run(query)
-            if (resultado.peek() is None):
-                pass
-            else:
-                for i in resultado:
-                    i = str(i)
-                    i = i[19:41]
-                    userAux = UsuarioAux(i, self.session)
-                    if(userAux.existeUsuario):
-                        usuarios.append(userAux)
-        return usuarios
+            nodo = None
+        return nodo

@@ -20,52 +20,30 @@ def nombreAmigos():
     if(len(user.friends) > 0):
         nombres = []
         for amigo in user.friends:
-            useraux = UsuarioAux(amigo, session)
-            print(useraux.name)
-            nombres.append(useraux.name)
+            print(amigo.get("name"))
+            nombres.append(amigo)
     else:
         print("No tienes amigos")
-    return nombres
+    return nombres        
 
-def buscarUsuarios(lista):
-    listaUsers = []
-    for u in lista:
-        contador = 0
-        encontrado = False
-        while (encontrado == False):
-            if(u == user.listaUsuarios[contador].name):
-                listaUsers.append(user.listaUsuarios[contador])
-                encontrado = True
-            else:
-                contador += 1
-    return listaUsers
-        
 
+#No comprueba que no se haya introducido ya el amigo, pero con la interfaz lo arreglaré
 def SeleccionarAmigos():
     amigosSeleccionados = []
     print("Selecciona a los amigos: ")
     nombres = nombreAmigos()
     if(len(user.friends) > 0):
         todosAmigos = False
-        print ("Introduce el id de los usuarios(Fin = Ya): ")
+        print ("Introduce el Nº del amigo que quieres añadir(Fin = Ya): ")
         while(todosAmigos == False):
             amigoSeleccionado = input()
             if(amigoSeleccionado != "Ya"):
-                if(nombres.count(amigoSeleccionado)>0):
-                    amigosSeleccionados.append(amigoSeleccionado)
+                amigoSeleccionado = int(amigoSeleccionado)
+                if(amigoSeleccionado<=len(nombres)):
+                    amigosSeleccionados.append(user.friends[amigoSeleccionado-1].get("user_id"))
             else:
                 todosAmigos = True
     return amigosSeleccionados
-    #Hacer el seleccionador de amigos
-    """
-    Obtener los amigos de la lista de amigos del usuario
-    Imprimirlos todos
-    Elegirlos
-        - Introducirlos por input()
-            - Comprobar que los introducidos estén en la lista
-        - Hacer el seleccionador cuando sepa hacerlo con la vista
-    """
-
 
 
 def SeleccionarCiudad():
@@ -117,9 +95,9 @@ def perteneceRestaurante(lista, restaurante):
 idCorrecto = False
 while(idCorrecto == False):
     print("Introduce tu userId: ")
-    idUsuario = input()                                            #####################################
-    #idUsuario = 'Q3Y0AjsTpuJuQ-TWZOlVzg'
-    #print(idUsuario)
+    #idUsuario = input()                                            #####################################
+    idUsuario = 'u1'
+    print(idUsuario)
     user = Usuario(idUsuario, session)
     if(user.existeUsuario() == False):
         print("El id introducido es erroneo")
@@ -127,20 +105,19 @@ while(idCorrecto == False):
         idCorrecto = True
 #Elegir amigos
 elegir = True
-algoritmo = Algoritmo()
+algoritmo = Algoritmo(session)
 while (elegir == True):   
     #Selecciona los amigos a los que hacer la recomendación
     seleccionados=[]
     while(len(seleccionados)==0 and len(user.friends)>0):
         seleccionados = SeleccionarAmigos()                        #####################################
         #seleccionados = ["Justin", "Mike"]
-    listaGrupo = buscarUsuarios(seleccionados)
-    listaGrupo.append(user)
     #Seleccionar el estado
     ciudad = ""
     while (len(ciudad)==0): 
-        ciudad = SeleccionarCiudad()                                      #####################################
-        #ciudad = "Zionsville"
+        #ciudad = SeleccionarCiudad()                                      #####################################
+        ciudad = "Zionsville"
+        print(ciudad)
     #Hacer el seleccionador de ciudad
 
     print("Amigos seleccionados: ")
@@ -151,40 +128,18 @@ while (elegir == True):
     #Generar recomendación
 
     #Crear grupo
-    grupo = Grupo(listaGrupo, session)
-    
-    mejoresRestaurantes =[]
+    grupo = Grupo(seleccionados, session)
 
-    for i in grupo.listaFinal:
-        r = Restaurante(i.restaurante_id, session)
-        mejoresRestaurantes.append(r)
     
-
+    #######################
+    ####USUARIOS AFINES####
+    #######################
     usuariosAfines = []
+    usuariosAfines = algoritmo.usuariosAfines(grupo)
 
-    for i in mejoresRestaurantes:
-        for j in i.listaUsuarios:
-            if(perteneceUsuario(grupo.listaUsuarios, j.user_id)==False):
-                usuariosAfines.append(j)
+    print (usuariosAfines)
 
-    #######################
-    ########JACCARD########
-    #######################
-
-    listaJaccard = []
-    listaJaccardFinal = []
-
-    for i in usuariosAfines:
-        listaJaccard.append(algoritmo.jaccard(grupo, i))
-
-    valMaxJaccard = max(listaJaccard)
     
-    n = 0
-    for i in listaJaccard:
-        if (i == valMaxJaccard):
-            listaJaccardFinal.append(usuariosAfines[n])
-        n += 1
-
 
     #######################
     #######SIMILITUD#######

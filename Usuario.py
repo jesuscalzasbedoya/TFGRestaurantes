@@ -24,11 +24,11 @@ class Usuario:
 
     def getAmigos(self):
         lista = []
-        query = "MATCH (u:Usuario{user_id: '" + self.user_id + "'})-[r:Reviews]->() RETURN r"
+        query = "MATCH (u:Usuario{user_id: '" + self.user_id + "'})-[:FRIEND]->(a) RETURN a"
         result = self.session.run(query)
         while result.peek():
             record = result.__next__()
-            node = record["r"]
+            node = record["a"]
             lista.append(node)
         return lista
     

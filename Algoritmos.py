@@ -2,8 +2,8 @@ import math
 
 class Algoritmo:
 
-    def __init__(self):
-        pass
+    def __init__(self, session):
+        self.session = session
 
     def similitud(self, grupo, usuario):
         arriba = 0
@@ -34,11 +34,12 @@ class Algoritmo:
         p = similitud * valoracion    #Que pasaria si la valoracion del restaurante y la valoracion media es la misma
         return grupo.valoracionMedia + p
 
-    def jaccard(self,grupo, usuario):
-        iguales = 0
-        total = len(grupo.listaFinal) + len(usuario.listaReviews)
-        for r in grupo.listaFinal:
-            if (usuario.restauranteReseniado(r.restaurante_id)):
-                iguales += 1
-        total = total - iguales
-        return iguales/total
+    def usuariosAfines(self,grupo):
+        lista = []
+        query = "MATCH (s:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE s.user_id in " + str(grupo.listaUsuarios) + " AND rev.stars <= 2 WITH collect(r.business_id) as restaurantes1 MATCH (s:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE s.user_id in " + str(grupo.listaUsuarios) + " AND NOT r.business_id in restaurantes1 WITH collect(r.business_id) as restaurantes2, restaurantes1 as rDescartados MATCH(r1:Restaurante)<-[:Reviews]-(u)-[:Reviews]->(r2:Restaurante) WHERE r1.business_id in restaurantes2 AND (NOT r2.business_id in restaurantes2 AND NOT r2.business_id in rDescartados) WITH  u.user_id as user_id , count(r1) as rComun, count(r2) as rDif ORDER BY rComun DESC, rDif DESC LIMIT 20 RETURN user_id"
+        result = self.session.run(query)
+        while result.peek():
+            record = result.__next__()
+            user_id = record["user_id"]
+            lista.append(user_id)
+        return lista

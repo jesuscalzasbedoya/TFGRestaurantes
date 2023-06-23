@@ -10,22 +10,11 @@ class Grupo:
 
 
     def obtenerValoracionMedia(self):           #Modificar
-        query = "MATCH (u:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE u.user_id in $listaUsuarios RETURN avg(rev.score) as mediaGrupo"
+        query = "MATCH (u:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE u.user_id in $listaUsuarios RETURN avg(rev.stars) as mediaGrupo"
         result = self.session.run(query, listaUsuarios = self.listaUsuarios)
         record = result.single()
         return float(record.get("mediaGrupo"))
         
-    """   
-    def obtenerNodo(self):
-        query = "MATCH (r:Restaurante{business_id:'" + self.restaurante_id + "'}) RETURN r"
-        result = self.session.run(query)
-        record = result.single()
-        if record:
-            nodo = record["r"]
-        else:
-            nodo = None
-        return nodo
-""" 
 
 
 

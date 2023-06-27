@@ -1,85 +1,29 @@
-from Usuario import Usuario
-from Review import Review
-
 class Grupo:
 
     def __init__(self, listaUsuarios, session):
         self.listaUsuarios = listaUsuarios
         self.session = session
         self.valoracionMedia = self.obtenerValoracionMedia()       #Obtener valoracion media de $seed
+        self.grupo_id = self.crearId()
+        self.crearNodo()
 
 
-    def obtenerValoracionMedia(self):           #Modificar
+    def obtenerValoracionMedia(self):          
         query = "MATCH (u:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE u.user_id in $listaUsuarios RETURN avg(rev.stars) as mediaGrupo"
         result = self.session.run(query, listaUsuarios = self.listaUsuarios)
         record = result.single()
         return float(record.get("mediaGrupo"))
-        
-
-
-
-
-    def inicializarReviews(self):
-        lista = []
-        for u in self.listaUsuarios:
-            for r in u.listaReviews:
-                review = Review(r, self.session)
-                lista.append(review)
-        return lista
-        
     
-    def actualizarRestaurantes(self, review):
-        val = review.stars
-        self.listaReviews += review
-        self.valoracionMedia = (self.valoracionMedia*((len(self.listaReviews))-1)/len(self.listaReviews)) + val*(1/len(self.listaReviews))
-
-    def eliminarDuplicados(self, lista, review, repeticiones):
-        valoracionAux = 0
-        contador = 0
-        indice = 0
-        indice1 = 0
-        rep = repeticiones
-        while (repeticiones > 1):
-            if(lista[indice].restaurante_id == review.restaurante_id):
-                if(contador == 0):
-                    contador += 1
-                    indice1 = indice
-                else:
-                    r = lista.pop(indice)
-                    valoracionAux += r.stars
-                    repeticiones -= 1
-            indice += 1
-        valoracionAux += lista[indice1].stars
-        lista[indice1].stars = (valoracionAux/rep)
-        return lista
-
-
-    def sanearRestaurantes(self):
-        listaNegra = []
-        listaAux = self.listaReviews
-        lista = []
-        contador = 0
-        for r in self.listaReviews:
-            if (r.stars<=2):
-                if(listaNegra.count(r.restaurante_id)==0):
-                    listaNegra.append(r.restaurante_id)
-        for i in listaNegra:
-            n = 0
-            for j in listaAux:
-                if(j.restaurante_id == i):
-                    listaAux.pop(n)
-                n += 1
-        for i in listaAux:
-            n = 0
-            contadorAux = 0
-            for j in listaAux:
-                if(j.restaurante_id == i.restaurante_id):
-                    contadorAux += 1
-            if(contadorAux==1):
-                lista.append(i)
-            else:
-                listaAux = self.eliminarDuplicados(listaAux, i, contadorAux)
-                lista.append(listaAux[contador])
-            contador += 1
-        return lista
-    
+    def crearId(self):
+        id = ""
+        for i in self.listaUsuarios:
+            id += i
+        return id
+        
+    def crearNodo(self):
+        query = "MERGE (g:Grupo{grupo_id: '" + self.grupo_id + "'})"
+        self.session.run(query)
+        query = "MATCH (s:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE s.user_id IN $listaUsuarios AND rev.stars <= 2 WITH collect(r.business_id) AS restaurantes1 MATCH (s:Usuario)-[rev:Reviews]->(r:Restaurante) WHERE s.user_id IN $listaUsuarios AND NOT r.business_id IN restaurantes1 WITH r.business_id AS restaurante_id, avg(rev.stars) AS media WITH collect({restaurante_id: restaurante_id, media: media}) AS restaurantesFinales MATCH (g:Grupo {grupo_id: '" + self.grupo_id + "'}) UNWIND restaurantesFinales AS r MATCH (rest:Restaurante) WHERE rest.business_id = r.restaurante_id MERGE (g)-[:GReviews {stars: r.media}]->(rest)"
+        self.session.run(query, listaUsuarios = self.listaUsuarios)
+        query = "MATCH (g:Grupo {grupo_id: '" + self.grupo_id + "'})-[:GReviews]->(rrev:Restaurante) WITH g, collect(rrev.business_id) AS restaurantesRevision MATCH (s:Usuario)-[:Reviews]->(r:Restaurante) WHERE s.user_id IN $listaUsuarios AND NOT r.business_id IN restaurantesRevision MERGE (g)-[:GDescartados]->(r)"
+        self.session.run(query, listaUsuarios = self.listaUsuarios)

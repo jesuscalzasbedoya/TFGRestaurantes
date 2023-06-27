@@ -1,5 +1,3 @@
-from UsuarioAux import UsuarioAux
-
 class Restaurante:
         
     def __init__(self, restauranteId, session):

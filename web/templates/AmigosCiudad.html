@@ -3,15 +3,25 @@
 {% block title %}{{ data.titulo }}{% endblock %}
 
 {% block body %}
+<form action="/amigosciudad/resultados" method="post">
+    <h3>Amigos</h3>
+    <select id="elegirAmigos" name="elegirAmigos" multiple>
+        {% for elemento in data.amigos %}
+            <option value="{{ elemento[0] }}">{{ elemento[1] }}</option>
+        {% endfor %}
+    </select>
 
-
-<h4>{{ data.amigos }}               {{ data.ciudad }}</h4>
-
-
-<form  method="POST">
-    
+    <h3>Ciudad</h3>
+    <select id="elegirCiudad" name="elegirCiudad">
+        {% for elemento in data.ciudades %}
+            <option value="{{ elemento }}">{{ elemento }}</option>
+        {% endfor %}
+    </select>
+    <p></p>
     <button type="submit" class="btn btn-primary">Seleccionar</button>
-
 </form>
+
+
+
 
 {% endblock %}

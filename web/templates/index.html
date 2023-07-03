@@ -4,9 +4,7 @@
 
 {% block body %}
 
-<h1>{{ data.titulo }}</h1>
-
-    <form  method="POST">
+    <form method="POST" action="/amigosciudad">
         <div class="form-group">
             <label for="user_id">Introduzca su ID</label>
             <input 
@@ -21,8 +19,8 @@
 
         <br />
         <button type="submit" class="btn btn-primary">Recomiéndandos un restaurante</button>
+    </form>
 
         
-    </form>
 
 {% endblock %}

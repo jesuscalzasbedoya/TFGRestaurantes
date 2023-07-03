@@ -1,7 +1,6 @@
 import os
 from flask import Flask, render_template, request
 from web import index
-import mainCodigo
 app = Flask(__name__)
 template_dir = os.path.abspath('web/templates')
 app.template_folder = template_dir

@@ -24,7 +24,7 @@ def amigosCiudad(amigos, ciudades):
     return render_template('AmigosCiudad.html', data=data)
 
 @app.route('/amigosciudad/resultados')
-def resultados(amigos, ciudad):
+def resultados():
     data ={
         'titulo': 'Recomendación de Restaurantes',
         'nombre': 'Nombre',

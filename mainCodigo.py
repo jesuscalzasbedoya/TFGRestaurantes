@@ -105,14 +105,13 @@ def eliminarGrupo(grupo):
 
 #Programa
 #Introducir el id
-if __name__ == "__main__":
-    app.run()
+
 idCorrecto = False
 while(idCorrecto == False):
     print("Introduce tu userId: ")
-    #idUsuario = input()                                            #####################################
-    idUsuario = 'u1'
-    print(idUsuario)
+    idUsuario = input()                                            #####################################
+    #idUsuario = 'u1'
+    #print(idUsuario)
     user = Usuario(idUsuario, session)
     if(user.existeUsuario() == False):
         print("El id introducido es erroneo")
@@ -140,7 +139,7 @@ while (elegir == True):
     print("Ciudad seleccionada:", ciudad)
 
     #Generar recomendación
-
+    print(seleccionados)
     #Crear grupo
     grupo = Grupo(seleccionados, session)
 
@@ -150,8 +149,7 @@ while (elegir == True):
     #######################
     usuariosAfines = []
     usuariosAfines = algoritmo.usuariosAfines(grupo)
-    print(usuariosAfines)
-
+    
     #######################
     #######SIMILITUD#######
     #######################

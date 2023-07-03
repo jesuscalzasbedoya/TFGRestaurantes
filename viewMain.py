@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request
 from web import index
-
+import mainCodigo
 app = Flask(__name__)
 template_dir = os.path.abspath('web/templates')
 app.template_folder = template_dir
@@ -38,7 +38,7 @@ def amigosCiudad():
 def resultados():
     amigosSeleccionados = request.form.getlist('elegirAmigos')
     ciudadSelecionada = request.form.getlist('elegirCiudad')
-    return index.resultados(amigosSeleccionados, ciudadSelecionada)
+    return index.resultados()
 
 
 if __name__ == "__main__":

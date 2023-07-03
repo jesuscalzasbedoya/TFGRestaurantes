@@ -126,7 +126,7 @@ while (elegir == True):
     seleccionados=[]
     while(len(seleccionados)==0 and len(user.friends)>0):
         seleccionados = SeleccionarAmigos()                        #####################################
-        #seleccionados = ["Justin", "Mike"]
+        #seleccionados = ["1", "Ya"]
     #Seleccionar el estado
     ciudad = ""
     while (len(ciudad)==0): 

@@ -4,38 +4,32 @@ app = Flask(__name__)
 
 
 
-@app.route("/")
-def home():
+@app.route('/', methods=['GET', 'POST'])
+def main():
     data = {
         'titulo': 'Recomendación de Restaurantes'
     }
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        return render_template('index.html', resultado=user_id)
     return render_template('index.html', data=data) 
 
-@app.route('/contacto/<nombre>/<int:edad>')
-def contacto(nombre, edad):
-    data = {
-        'titulo': 'Contacto',
-        'nombre':  nombre,
-        'edad': edad
-    }
-    return render_template('contacto.html', data=data)
-
-@app.route('/amigosciudad')
-def amigosCiudad():
+@app.route('/amigosciudad', methods=['GET', 'POST'])
+def amigosCiudad(amigos, ciudades):
     data = {
         'titulo': 'Recomendación de Restaurantes',
-        'amigos': 'Elegir amigos',
-        'ciudad': 'Elegir ciudad'
+        'amigos': amigos,
+        'ciudades': ciudades
     }
     return render_template('AmigosCiudad.html', data=data)
 
 @app.route('/amigosciudad/resultados')
-def resultados():
+def resultados(amigos, ciudad):
     data ={
         'titulo': 'Recomendación de Restaurantes',
         'nombre': 'Nombre',
         'direccion': 'Dirección',
-        'valoracion': 'Valoración'
+        'valoracion': 'Valoración',
     }
     return render_template('MostrarResultados.html', data = data)
 
@@ -56,6 +50,7 @@ def result():
 
     return render_template('index.html', user_id=user_id)
 """
+
 
 if __name__ == "__main__":
     app.add_url_rule('/query_string', view_func=query_string)

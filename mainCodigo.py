@@ -4,7 +4,6 @@ from Usuario import Usuario
 from Grupo import Grupo
 from Restaurante import Restaurante
 
-
 #Conexion a la base de datos
 url = "bolt://localhost:7687"
 driver = GraphDatabase.driver(url, auth=("neo4j", "12345678"))
@@ -106,6 +105,8 @@ def eliminarGrupo(grupo):
 
 #Programa
 #Introducir el id
+if __name__ == "__main__":
+    app.run()
 idCorrecto = False
 while(idCorrecto == False):
     print("Introduce tu userId: ")
@@ -132,7 +133,6 @@ while (elegir == True):
         #ciudad = SeleccionarCiudad()                                      #####################################
         ciudad = "Zionsville"
         print(ciudad)
-    #Hacer el seleccionador de ciudad
 
     print("Amigos seleccionados: ")
     for s in seleccionados:

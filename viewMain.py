@@ -1,26 +1,26 @@
 import os
 from flask import Flask, render_template, request
+from neo4j import GraphDatabase
 from web import index
+import mainCodigo
+
+#Conexion a la base de datos
+url = "bolt://localhost:7687"
+driver = GraphDatabase.driver(url, auth=("neo4j", "12345678"))
+session = driver.session()
+
+#Inicializar web
 app = Flask(__name__)
 template_dir = os.path.abspath('web/templates')
 app.template_folder = template_dir
 
-def obtenerAmigos ():
-    amigos = []
-    amigo = ("2", "u2")
-    amigos.append(amigo)
-    amigo = ("3", "u3")
-    amigos.append(amigo)
-    amigo = ("4", "u4")
-    amigos.append(amigo)
+def obtenerAmigos (user_id):
+    amigos = mainCodigo.obtenerAmigos(user_id, session)
     return amigos
 
 def obtenerCiudades():
-    ciudades = []
-    ciudades.append("Madrid")
-    ciudades.append("Ferrol")
+    ciudades = mainCodigo.obtenerCiudades(session)
     return ciudades
-
 
 @app.route('/')
 def main():
@@ -28,8 +28,8 @@ def main():
 
 @app.route('/amigosciudad', methods=['POST'])
 def amigosCiudad():
-    texto = request.form.get('user_id')  # Obtener el valor del campo de texto del formulario
-    amigos = obtenerAmigos()
+    user_id = request.form.get('user_id')  # Obtener el valor del campo de texto del formulario
+    amigos = obtenerAmigos(user_id)
     ciudades = obtenerCiudades()
     return index.amigosCiudad(amigos, ciudades)
 
@@ -42,3 +42,6 @@ def resultados():
 
 if __name__ == "__main__":
     app.run(debug= True, port=5001)
+
+
+session.close()

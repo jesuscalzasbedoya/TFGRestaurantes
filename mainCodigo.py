@@ -5,11 +5,8 @@ from Grupo import Grupo
 from Restaurante import Restaurante
 
 #Conexion a la base de datos
-url = "bolt://localhost:7687"
-driver = GraphDatabase.driver(url, auth=("neo4j", "12345678"))
-session = driver.session()
 
-def obtenerCiudades():
+def obtenerCiudades(session):
     lista = []
     query = ("MATCH (r:Restaurante) RETURN DISTINCT(r.city) as ciudad ORDER BY r.city ASC")
     result = session.run(query)
@@ -19,23 +16,22 @@ def obtenerCiudades():
         lista.append(node)
     return lista
 
-ciudades = obtenerCiudades()
+#ciudades = obtenerCiudades()
 
 #Funciones
 
-def nombreAmigos():
+def obtenerAmigos(user_id, session):
+    user = Usuario(user_id, session)
+    amigos = []
     if(len(user.friends) > 0):
-        nombres = []
         for amigo in user.friends:
-            print(amigo.get("name"))
-            nombres.append(amigo)
-    else:
-        print("No tienes amigos")
-    return nombres        
-
+            a = (amigo.get("user_id"), amigo.get("name"))
+            amigos.append(a)
+    return amigos        
 
 #No comprueba que no se haya introducido ya el amigo, pero con la interfaz lo arreglaré
-def SeleccionarAmigos():
+"""
+def SeleccionarAmigos(user):
     amigosSeleccionados = []
     print("Selecciona a los amigos: ")
     nombres = nombreAmigos()
@@ -52,8 +48,8 @@ def SeleccionarAmigos():
                 todosAmigos = True
     amigosSeleccionados.append(user.user_id)
     return amigosSeleccionados
-
-
+"""
+"""
 def SeleccionarCiudad():
     repetir = True
     while(repetir):
@@ -78,8 +74,8 @@ def repetirRecomendacion():
             elegir = False
             valida = True
     return elegir
-
-def sanearRestaurantes(listaPred):
+"""
+def sanearRestaurantes(listaPred, session):
     listaRest = []
     for i in listaPred:
         apariciones = 0
@@ -99,13 +95,21 @@ def sanearRestaurantes(listaPred):
     return listaRest
 
 
-def eliminarGrupo(grupo):
+def eliminarGrupo(grupo, session):
     query = "MATCH (g:Grupo{grupo_id: '" + grupo.grupo_id + "'})-[r]->() DELETE r, g"
     session.run(query)
 
 #Programa
 #Introducir el id
+def comprobarId(idUsuario, session):
+    idCorrecto = False
+    user = Usuario(idUsuario, session)
+    if(user.existeUsuario() == False):
+        print("El id introducido es erroneo")
+    else:
+        idCorrecto = True
 
+"""
 idCorrecto = False
 while(idCorrecto == False):
     print("Introduce tu userId: ")
@@ -117,9 +121,11 @@ while(idCorrecto == False):
         print("El id introducido es erroneo")
     else:
         idCorrecto = True
+"""
+
 #Elegir amigos
+"""
 elegir = True
-algoritmo = Algoritmo(session)
 while (elegir == True):   
     #Selecciona los amigos a los que hacer la recomendación
     seleccionados=[]
@@ -129,21 +135,21 @@ while (elegir == True):
     #Seleccionar el estado
     ciudad = ""
     while (len(ciudad)==0): 
-        #ciudad = SeleccionarCiudad()                                      #####################################
-        ciudad = "Zionsville"
-        print(ciudad)
+        ciudad = SeleccionarCiudad()                                      #####################################
+        #ciudad = "Zionsville"
+        #print(ciudad)
 
     print("Amigos seleccionados: ")
     for s in seleccionados:
         print(" - ", s)
     print("Ciudad seleccionada:", ciudad)
-
-    #Generar recomendación
     print(seleccionados)
-    #Crear grupo
-    grupo = Grupo(seleccionados, session)
+"""
 
-    
+def generarRecomendacion(seleccionados, session):
+    grupo = Grupo(seleccionados, session)
+    algoritmo = Algoritmo(session)
+
     #######################
     ####USUARIOS AFINES####
     #######################
@@ -173,14 +179,10 @@ while (elegir == True):
         listaPredicciones += algoritmo.prediccion(grupo, i)
 
     listaRestaurantes = sanearRestaurantes(listaPredicciones)
-    
-    for i in listaRestaurantes:
-        print(i[0].name, ": ", i[1])
 
     eliminarGrupo(grupo)
-
-    #elegir = False
-    elegir = repetirRecomendacion()                            #####################################
+    return listaRestaurantes
+#elegir = False
+#elegir = repetirRecomendacion()                            #####################################
     
 
-session.close()

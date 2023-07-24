@@ -11,9 +11,15 @@ def main():
     }
     if request.method == 'POST':
         user_id = request.form.get('user_id')
-        return render_template('index.html', resultado=user_id, data=data)  # Asegúrate de pasar 'data'
-    return render_template('index.html', data=data)  # Asegúrate de pasar 'data'
+        return render_template('indexIdErroneo.html', resultado=user_id, data=data)
+    return render_template('index.html', data=data)
 
+@app.route('/idErroneo', methods=['GET', 'POST'])
+def idErroneo():
+    data = {
+        'titulo': 'Recomendación de Restaurantes'
+    }
+    return render_template('indexIdErroneo.html', data=data)
 
 @app.route('/amigosciudad', methods=['GET'])
 def amigosCiudad(amigos, ciudades):
@@ -42,16 +48,6 @@ def query_string():
 
 def pagina_no_encontrada(error):
     return redirect(url_for('home'))
-
-"""
-@app.route("/result",methods = ['POST', "GET"])
-def result():
-    output = request.form.to_dict()
-    user_id = output["user_id"]
-
-    return render_template('index.html', user_id=user_id)
-"""
-
 
 if __name__ == "__main__":
     app.add_url_rule('/query_string', view_func=query_string)

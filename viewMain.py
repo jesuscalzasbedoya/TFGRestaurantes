@@ -35,7 +35,9 @@ def comprobarUserId():
     if (mainCodigo.comprobarId(user_id)):
         ruta = ''
 """
-
+@app.route('/idErroneo')
+def idErroneo():
+    return index.idErroneo()
 
 ##############################
 #####Mirar que esté bien######
@@ -49,7 +51,7 @@ def amigosCiudad():
         ciudades = obtenerCiudades()
         return index.amigosCiudad(amigos, ciudades)
     else:
-        return redirect('/')
+        return redirect('/idErroneo')
 
 @app.route('/amigosciudad/resultados', methods=['POST'])
 def resultados():

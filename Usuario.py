@@ -3,9 +3,9 @@ class Usuario:
     def __init__(self, userId, session):
         self.user_id = userId
         self.session = session
-        user = self.obtenerNodo()
-        if user != None:
-            self.name = user.get("name")
+        self.user = self.obtenerNodo()
+        if self.user is not None:
+            self.name = self.user.get("name")
             self.friends = self.getAmigos()
             self.valoracionMedia = self.getValoracionMedia()
 
@@ -40,7 +40,4 @@ class Usuario:
         return media
 
     def existeUsuario(self):
-        existe = False
-        if (self.name != None):
-            existe = True
-        return existe
+        return self.user is not None

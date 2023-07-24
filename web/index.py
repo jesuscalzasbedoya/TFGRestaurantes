@@ -11,10 +11,11 @@ def main():
     }
     if request.method == 'POST':
         user_id = request.form.get('user_id')
-        return render_template('index.html', resultado=user_id)
-    return render_template('index.html', data=data) 
+        return render_template('index.html', resultado=user_id, data=data)  # Asegúrate de pasar 'data'
+    return render_template('index.html', data=data)  # Asegúrate de pasar 'data'
 
-@app.route('/amigosciudad', methods=['GET', 'POST'])
+
+@app.route('/amigosciudad', methods=['GET'])
 def amigosCiudad(amigos, ciudades):
     data = {
         'titulo': 'Recomendación de Restaurantes',

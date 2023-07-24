@@ -104,10 +104,9 @@ def eliminarGrupo(grupo, session):
 def comprobarId(idUsuario, session):
     idCorrecto = False
     user = Usuario(idUsuario, session)
-    if(user.existeUsuario() == False):
-        print("El id introducido es erroneo")
-    else:
+    if(user.existeUsuario() == True):
         idCorrecto = True
+    return idCorrecto
 
 """
 idCorrecto = False

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request
+from flask import Flask, request, redirect
 from neo4j import GraphDatabase
 from web import index
 import mainCodigo
@@ -8,6 +8,7 @@ import mainCodigo
 url = "bolt://localhost:7687"
 driver = GraphDatabase.driver(url, auth=("neo4j", "12345678"))
 session = driver.session()
+user_id = None
 
 #Inicializar web
 app = Flask(__name__)
@@ -26,12 +27,29 @@ def obtenerCiudades():
 def main():
     return index.main()
 
+"""
+@app.route('/comprobarUserId')
+def comprobarUserId():
+    user_id = request.form.get('user_id')  # Obtener el valor del campo de texto del formulario
+    ruta = '/'
+    if (mainCodigo.comprobarId(user_id)):
+        ruta = ''
+"""
+
+
+##############################
+#####Mirar que esté bien######
+##############################
+
 @app.route('/amigosciudad', methods=['POST'])
 def amigosCiudad():
-    user_id = request.form.get('user_id')  # Obtener el valor del campo de texto del formulario
-    amigos = obtenerAmigos(user_id)
-    ciudades = obtenerCiudades()
-    return index.amigosCiudad(amigos, ciudades)
+    user_id = request.form.get('user_id')
+    if mainCodigo.comprobarId(user_id, session):
+        amigos = obtenerAmigos(user_id)
+        ciudades = obtenerCiudades()
+        return index.amigosCiudad(amigos, ciudades)
+    else:
+        return redirect('/')
 
 @app.route('/amigosciudad/resultados', methods=['POST'])
 def resultados():

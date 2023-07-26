@@ -16,10 +16,7 @@ def obtenerCiudades(session):
         lista.append(node)
     return lista
 
-#ciudades = obtenerCiudades()
-
 #Funciones
-
 def obtenerAmigos(user_id, session):
     user = Usuario(user_id, session)
     amigos = []
@@ -29,54 +26,9 @@ def obtenerAmigos(user_id, session):
             amigos.append(a)
     return amigos        
 
-#No comprueba que no se haya introducido ya el amigo, pero con la interfaz lo arreglaré
-"""
-def SeleccionarAmigos(user):
-    amigosSeleccionados = []
-    print("Selecciona a los amigos: ")
-    nombres = nombreAmigos()
-    if(len(user.friends) > 0):
-        todosAmigos = False
-        print ("Introduce el Nº del amigo que quieres añadir(Fin = Ya): ")
-        while(todosAmigos == False):
-            amigoSeleccionado = input()
-            if(amigoSeleccionado != "Ya"):
-                amigoSeleccionado = int(amigoSeleccionado)
-                if(amigoSeleccionado<=len(nombres)):
-                    amigosSeleccionados.append(user.friends[amigoSeleccionado-1].get("user_id"))
-            else:
-                todosAmigos = True
-    amigosSeleccionados.append(user.user_id)
-    return amigosSeleccionados
-"""
-"""
-def SeleccionarCiudad():
-    repetir = True
-    while(repetir):
-        print("Elige la ciudad en la que quieras que esté el restaurante: ")
-        print (ciudades)
-        ciudad = input()
-        if (ciudades.count(ciudad)>0):
-            repetir = False
-        else:
-            print("La ciudad introducida es erronea")
-    return ciudad
-
-def repetirRecomendacion():
-    valida = False
-    while(valida == False):
-        print("Recomendar de nuevo S/N")
-        respuesta = input()
-        if(respuesta == 'S'): 
-            elegir = True
-            valida = True
-        elif (respuesta == 'N'):
-            elegir = False
-            valida = True
-    return elegir
-"""
-def sanearRestaurantes(listaPred, session):
+def sanearRestaurantes(listaPred, ciudad, session):
     listaRest = []
+    listaFinal = []
     for i in listaPred:
         apariciones = 0
         prediccion = 0
@@ -92,7 +44,11 @@ def sanearRestaurantes(listaPred, session):
                     prediccion += k[1]  
             tupla = (Restaurante(i[0], session), prediccion/apariciones)
             listaRest.append(tupla)
-    return listaRest
+    for i in listaRest:
+        if i[0].ciudad == ciudad[0]:
+            tupla = (i[0].name, i[0].direccion, i[1])
+            listaFinal.append(tupla)
+    return listaFinal
 
 
 def eliminarGrupo(grupo, session):
@@ -108,44 +64,7 @@ def comprobarId(idUsuario, session):
         idCorrecto = True
     return idCorrecto
 
-"""
-idCorrecto = False
-while(idCorrecto == False):
-    print("Introduce tu userId: ")
-    idUsuario = input()                                            #####################################
-    #idUsuario = 'u1'
-    #print(idUsuario)
-    user = Usuario(idUsuario, session)
-    if(user.existeUsuario() == False):
-        print("El id introducido es erroneo")
-    else:
-        idCorrecto = True
-"""
-
-#Elegir amigos
-"""
-elegir = True
-while (elegir == True):   
-    #Selecciona los amigos a los que hacer la recomendación
-    seleccionados=[]
-    while(len(seleccionados)==0 and len(user.friends)>0):
-        seleccionados = SeleccionarAmigos()                        #####################################
-        #seleccionados = ["1", "Ya"]
-    #Seleccionar el estado
-    ciudad = ""
-    while (len(ciudad)==0): 
-        ciudad = SeleccionarCiudad()                                      #####################################
-        #ciudad = "Zionsville"
-        #print(ciudad)
-
-    print("Amigos seleccionados: ")
-    for s in seleccionados:
-        print(" - ", s)
-    print("Ciudad seleccionada:", ciudad)
-    print(seleccionados)
-"""
-
-def generarRecomendacion(seleccionados, session):
+def generarRecomendacion(seleccionados, ciudad, session):
     grupo = Grupo(seleccionados, session)
     algoritmo = Algoritmo(session)
 
@@ -176,12 +95,10 @@ def generarRecomendacion(seleccionados, session):
 
     for i in similitudes:
         listaPredicciones += algoritmo.prediccion(grupo, i)
-
-    listaRestaurantes = sanearRestaurantes(listaPredicciones)
-
-    eliminarGrupo(grupo)
-    return listaRestaurantes
-#elegir = False
-#elegir = repetirRecomendacion()                            #####################################
     
+    #####ObtenerCiudad#####
+    listaRestaurantes = sanearRestaurantes(listaPredicciones, ciudad, session)
 
+    eliminarGrupo(grupo, session)
+
+    return listaRestaurantes

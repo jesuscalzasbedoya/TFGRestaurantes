@@ -1,7 +1,7 @@
 class Usuario:
 
     def __init__(self, userId, session):
-        self.user_id = userId
+        self.user_id = str(userId)
         self.session = session
         self.user = self.obtenerNodo()
         if self.user is not None:

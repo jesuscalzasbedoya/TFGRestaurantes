@@ -7,10 +7,12 @@
 
 <h4>{{ data.nombre }} {{ data.direccion }} {{ data.valoracion }}</h4>
 
-<form action="/amigosciudad" method="POST">
-    
+<form action="/">
+    {% for restaurante in data.restaurantes %}
+            <li>{{ restaurante[0] }} - {{ restaurante[1] }} - {{ restaurante[2] }}</li>
+    {% endfor %}
     <button type="submit" class="btn btn-primary">Recomiéndandos de nuevo</button>
-
+    
 </form>
-
+<!--<a href="{{ url_for('amigosCiudad', user_id=data.user_id) }}">Volver a AmigosCiudad</a>-->
 {% endblock %}

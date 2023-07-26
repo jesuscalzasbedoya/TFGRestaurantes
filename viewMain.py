@@ -23,33 +23,27 @@ def obtenerCiudades():
     ciudades = mainCodigo.obtenerCiudades(session)
     return ciudades
 
+def obtenerRestaurantes(amigos, user_id, ciudad):
+    amigos.append(user_id)
+    restaurantes = mainCodigo.generarRecomendacion(amigos, ciudad, session)
+    return restaurantes
+
 @app.route('/')
 def main():
     return index.main()
 
-"""
-@app.route('/comprobarUserId')
-def comprobarUserId():
-    user_id = request.form.get('user_id')  # Obtener el valor del campo de texto del formulario
-    ruta = '/'
-    if (mainCodigo.comprobarId(user_id)):
-        ruta = ''
-"""
 @app.route('/idErroneo')
 def idErroneo():
     return index.idErroneo()
 
-##############################
-#####Mirar que esté bien######
-##############################
-
-@app.route('/amigosciudad', methods=['POST'])
+@app.route('/amigosciudad', methods=['GET', 'POST'])
 def amigosCiudad():
     user_id = request.form.get('user_id')
+    app.config['user_id'] = user_id
     if mainCodigo.comprobarId(user_id, session):
         amigos = obtenerAmigos(user_id)
         ciudades = obtenerCiudades()
-        return index.amigosCiudad(amigos, ciudades)
+        return index.amigosCiudad(amigos, ciudades, user_id)
     else:
         return redirect('/idErroneo')
 
@@ -57,7 +51,9 @@ def amigosCiudad():
 def resultados():
     amigosSeleccionados = request.form.getlist('elegirAmigos')
     ciudadSelecionada = request.form.getlist('elegirCiudad')
-    return index.resultados()
+    restaurantes = obtenerRestaurantes(amigosSeleccionados, app.config['user_id'], ciudadSelecionada)
+    # Usa user_id como sea necesario en el procesamiento de resultados
+    return index.resultados(restaurantes, user_id)
 
 
 if __name__ == "__main__":

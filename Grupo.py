@@ -17,7 +17,7 @@ class Grupo:
     def crearId(self):
         id = ""
         for i in self.listaUsuarios:
-            id += i
+            id += str(i)
         return id
         
     def crearNodo(self):

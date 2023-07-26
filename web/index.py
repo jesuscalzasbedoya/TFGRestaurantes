@@ -22,21 +22,23 @@ def idErroneo():
     return render_template('indexIdErroneo.html', data=data)
 
 @app.route('/amigosciudad', methods=['GET'])
-def amigosCiudad(amigos, ciudades):
+def amigosCiudad(amigos, ciudades, user_id):
     data = {
         'titulo': 'Recomendación de Restaurantes',
         'amigos': amigos,
         'ciudades': ciudades
     }
-    return render_template('AmigosCiudad.html', data=data)
+    return render_template('AmigosCiudad.html', data=data, user_id=user_id)
 
 @app.route('/amigosciudad/resultados')
-def resultados():
+def resultados(restaurantes, user_id):
     data ={
         'titulo': 'Recomendación de Restaurantes',
         'nombre': 'Nombre',
         'direccion': 'Dirección',
         'valoracion': 'Valoración',
+        'restaurantes': restaurantes,
+        'user_id': user_id
     }
     return render_template('MostrarResultados.html', data = data)
 

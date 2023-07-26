@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def main():
     data = {
-        'titulo': 'Recomendación de Restaurantes'
+        'titulo': 'GROUP EAT'
     }
     if request.method == 'POST':
         user_id = request.form.get('user_id')
@@ -17,14 +17,14 @@ def main():
 @app.route('/idErroneo', methods=['GET', 'POST'])
 def idErroneo():
     data = {
-        'titulo': 'Recomendación de Restaurantes'
+        'titulo': 'GROUP EAT'
     }
     return render_template('indexIdErroneo.html', data=data)
 
 @app.route('/amigosciudad', methods=['GET'])
 def amigosCiudad(amigos, ciudades, user_id):
     data = {
-        'titulo': 'Recomendación de Restaurantes',
+        'titulo': 'GROUP EAT',
         'amigos': amigos,
         'ciudades': ciudades
     }
@@ -33,7 +33,7 @@ def amigosCiudad(amigos, ciudades, user_id):
 @app.route('/amigosciudad/resultados')
 def resultados(restaurantes, user_id):
     data ={
-        'titulo': 'Recomendación de Restaurantes',
+        'titulo': 'GROUP EAT',
         'nombre': 'Nombre',
         'direccion': 'Dirección',
         'valoracion': 'Valoración',

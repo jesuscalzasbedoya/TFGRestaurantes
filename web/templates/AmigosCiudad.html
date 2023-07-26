@@ -3,26 +3,29 @@
 {% block title %}{{ data.titulo }}{% endblock %}
 
 {% block body %}
-<form action="/amigosciudad/resultados" method="post">
-    <h3>Amigos</h3>
-    <select id="elegirAmigos" name="elegirAmigos" multiple>
-        {% for elemento in data.amigos %}
-            <option value="{{ elemento[0] }}">{{ elemento[1] }}</option>
-        {% endfor %}
-    </select>
-
-    <h3>Ciudad</h3>
-    <select id="elegirCiudad" name="elegirCiudad">
-        {% for elemento in data.ciudades %}
-            <option value="{{ elemento }}">{{ elemento }}</option>
-        {% endfor %}
-    </select>
-    <p></p>
-    <button type="submit" class="btn btn-primary">Seleccionar</button>
-    
-</form>
-
-
-
-
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="/amigosciudad/resultados" method="post" class="mb-4">
+                <div class="form-group">
+                    <label for="elegirAmigos"><h3>Amigos</h3></label>
+                    <select id="elegirAmigos" name="elegirAmigos" multiple class="form-control">
+                        {% for elemento in data.amigos %}
+                            <option value="{{ elemento[0] }}">{{ elemento[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="elegirCiudad"><h3>Ciudad</h3></label>
+                    <select id="elegirCiudad" name="elegirCiudad" class="form-control">
+                        {% for elemento in data.ciudades %}
+                            <option value="{{ elemento }}">{{ elemento }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #00665e;">Seleccionar</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

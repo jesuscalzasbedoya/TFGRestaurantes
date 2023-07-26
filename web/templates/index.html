@@ -3,23 +3,24 @@
 {% block title %}{{ data.titulo }}{% endblock %}
 
 {% block body %}
-
-    <form method="POST" action="/amigosciudad">
-        <div class="form-group">
-            <label for="user_id">Introduzca su ID</label>
-            <input 
-                type="user_id" 
-                class="form-control" 
-                id="user_id" 
-                name="user_id" 
-                placeholder="Introduce tu id de usuario"
-            />
-
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form method="POST" action="/amigosciudad" class="mb-4">
+                <div class="form-group">
+                    <label for="user_id">Introduzca su ID</label>
+                    <input 
+                        type="text"
+                        class="form-control" 
+                        id="user_id" 
+                        name="user_id" 
+                        placeholder="Introduce tu ID de usuario"
+                    />
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #00665e;">Recomendar un restaurante</button>
+            </form>
         </div>
-        <br />
-        <button type="submit" class="btn btn-primary">Recomiéndandos un restaurante</button>
-    </form>
-
-        
+    </div>
+</div>
 
 {% endblock %}

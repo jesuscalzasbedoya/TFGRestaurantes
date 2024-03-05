@@ -49,8 +49,8 @@ class Algoritmo:
             tupla = (restaurante_id, p)
             lista.append(tupla)
         #Cuidado, porque puede ser que necesite crear nuevos valores porque de error
-        #lista = sorted(lista, key=lambda x: x[1], reverse=True)
-        #lista = lista[:5]
+        lista = sorted(lista, key=lambda x: x[1], reverse=True)
+        lista = lista[:5]
         return lista
 
     def usuariosAfines(self,grupo):

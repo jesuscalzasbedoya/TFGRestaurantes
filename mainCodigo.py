@@ -41,14 +41,15 @@ def sanearRestaurantes(listaPred, ciudad, session):
             for k in listaPred:
                 if (i[0] == k[0]):
                     apariciones += 1
-                    prediccion += k[1]  
-            tupla = (Restaurante(i[0], session), prediccion/apariciones)
+                    prediccion += k[1]
+            tupla = (Restaurante(i[0], session), round(prediccion / apariciones, 2))
             listaRest.append(tupla)
     for i in listaRest:
         if i[0].ciudad == ciudad[0]:
             tupla = (i[0].name, i[0].direccion, i[1])
             listaFinal.append(tupla)
-    return listaFinal
+    listaFinal.sort(key=lambda x: x[2], reverse=True)  
+    return listaFinal[:5]
 
 
 def eliminarGrupo(grupo, session):

@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, redirect
 from neo4j import GraphDatabase
 from web import index
-import mainCodigo
+import DataExchange
 
 #Conexion a la base de datos
 url = "bolt://localhost:7687"
@@ -14,19 +14,6 @@ user_id = None
 app = Flask(__name__)
 template_dir = os.path.abspath('web/templates')
 app.template_folder = template_dir
-
-def obtenerAmigos (user_id):
-    amigos = mainCodigo.obtenerAmigos(user_id, session)
-    return amigos
-
-def obtenerCiudades():
-    ciudades = mainCodigo.obtenerCiudades(session)
-    return ciudades
-
-def obtenerRestaurantes(amigos, user_id, ciudad):
-    amigos.append(user_id)
-    restaurantes = mainCodigo.generarRecomendacion(amigos, ciudad, session)
-    return restaurantes
 
 @app.route('/')
 def main():
@@ -40,9 +27,9 @@ def idErroneo():
 def amigosCiudad():
     user_id = request.form.get('user_id')
     app.config['user_id'] = user_id
-    if mainCodigo.comprobarId(user_id, session):
-        amigos = obtenerAmigos(user_id)
-        ciudades = obtenerCiudades()
+    if DataExchange.comprobarId(user_id, session):
+        amigos = DataExchange.obtenerAmigos(user_id, session)
+        ciudades = DataExchange.obtenerCiudades(session)
         return index.amigosCiudad(amigos, ciudades, user_id)
     else:
         return redirect('/idErroneo')
@@ -51,10 +38,9 @@ def amigosCiudad():
 def resultados():
     amigosSeleccionados = request.form.getlist('elegirAmigos')
     ciudadSelecionada = request.form.getlist('elegirCiudad')
-    restaurantes = obtenerRestaurantes(amigosSeleccionados, app.config['user_id'], ciudadSelecionada)
+    restaurantes = DataExchange.obtenerRestaurantes(amigosSeleccionados, app.config['user_id'], ciudadSelecionada, session)
     # Usa user_id como sea necesario en el procesamiento de resultados
     return index.resultados(restaurantes, user_id)
-
 
 if __name__ == "__main__":
     app.run(debug= True, port=5001)

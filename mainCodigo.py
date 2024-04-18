@@ -41,7 +41,7 @@ def sanearRestaurantes(listaPred, ciudad, session):
             for k in listaPred:
                 if (i[0] == k[0]):
                     apariciones += 1
-                    prediccion += k[1]
+                    prediccion += k[1]                                           
             tupla = (Restaurante(i[0], session), round(prediccion / apariciones, 2))
             listaRest.append(tupla)
     for i in listaRest:
@@ -58,13 +58,6 @@ def eliminarGrupo(grupo, session):
 
 #Programa
 #Introducir el id
-def comprobarId(idUsuario, session):
-    idCorrecto = False
-    user = Usuario(idUsuario, session)
-    if(user.existeUsuario() == True):
-        idCorrecto = True
-    return idCorrecto
-
 def generarRecomendacion(seleccionados, ciudad, session):
     grupo = Grupo(seleccionados, session)
     algoritmo = Algoritmo(session)

@@ -2,8 +2,6 @@ from flask import Flask, render_template, request, url_for, redirect
 
 app = Flask(__name__)
 
-
-
 @app.route('/', methods=['GET', 'POST'])
 def main():
     data = {
@@ -49,9 +47,9 @@ def query_string():
     return "ok"
 
 def pagina_no_encontrada(error):
-    return redirect(url_for('home'))
+    return render_template('404.html'), 404
 
 if __name__ == "__main__":
     app.add_url_rule('/query_string', view_func=query_string)
     app.register_error_handler(404, pagina_no_encontrada)
-    app.run(debug= True, port=5001)
+    app.run(debug=True, port=5001)

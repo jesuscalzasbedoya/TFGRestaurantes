@@ -4,19 +4,17 @@ from Usuario import Usuario
 from Grupo import Grupo
 from Restaurante import Restaurante
 
-#Conexion a la base de datos
-
-def obtenerCiudades(session):
+#Funciones
+def obtenerCiudades(user_id, session):
     lista = []
-    query = ("MATCH (r:Restaurante) RETURN DISTINCT(r.city) as ciudad ORDER BY r.city ASC")
+    query = ("MATCH (u:Usuario{user_id:'" + user_id + "'})-[:FRIEND]->(a:Usuario) WITH COLLECT(u) + COLLECT(a) AS grupo MATCH (g)-[:Reviews]->(:Restaurante)<-[:Reviews]-(u:Usuario)-[:Reviews]-(r:Restaurante) WHERE g IN grupo RETURN DISTINCT r.city as Ciudad")
     result = session.run(query)
     while result.peek():
         record = result.__next__()
-        node = record["ciudad"]
+        node = record["Ciudad"]
         lista.append(node)
     return lista
 
-#Funciones
 def obtenerAmigos(user_id, session):
     user = Usuario(user_id, session)
     amigos = []
@@ -29,6 +27,7 @@ def obtenerAmigos(user_id, session):
 def sanearRestaurantes(listaPred, ciudad, session):
     listaRest = []
     listaFinal = []
+    # Se comprueba que no se repita el mismo restaurante
     for i in listaPred:
         apariciones = 0
         prediccion = 0
@@ -41,23 +40,24 @@ def sanearRestaurantes(listaPred, ciudad, session):
             for k in listaPred:
                 if (i[0] == k[0]):
                     apariciones += 1
-                    prediccion += k[1]                                           
+                    prediccion += k[1]    
+            # Se añade a la lista resultante el restaurante junto a la media de todas las predicciones
             tupla = (Restaurante(i[0], session), round(prediccion / apariciones, 2))
             listaRest.append(tupla)
+    # Se seleccionan únicamente los restaurantes que se encuentran en la ciudad indicada
     for i in listaRest:
-        if i[0].ciudad == ciudad[0]:
-            tupla = (i[0].name, i[0].direccion, i[1])
+        if i[0].ciudad == ciudad[0] or i[0].ciudad == ciudad:
+            tupla = (i[0].name, i[1], i[0].direccion)
             listaFinal.append(tupla)
-    listaFinal.sort(key=lambda x: x[2], reverse=True)  
+    # Devolver los 5 restaurantes con predicción más alta
+    listaFinal.sort(key=lambda x: x[1], reverse=True)  
     return listaFinal[:5]
-
 
 def eliminarGrupo(grupo, session):
     query = "MATCH (g:Grupo{grupo_id: '" + grupo.grupo_id + "'})-[r]->() DELETE r, g"
     session.run(query)
 
 #Programa
-#Introducir el id
 def generarRecomendacion(seleccionados, ciudad, session):
     grupo = Grupo(seleccionados, session)
     algoritmo = Algoritmo(session)

@@ -29,7 +29,7 @@ def amigosCiudad():
     app.config['user_id'] = user_id
     if DataExchange.comprobarId(user_id, session):
         amigos = DataExchange.obtenerAmigos(user_id, session)
-        ciudades = DataExchange.obtenerCiudades(session)
+        ciudades = DataExchange.obtenerCiudades(user_id, session)
         return index.amigosCiudad(amigos, ciudades, user_id)
     else:
         return redirect('/idErroneo')
@@ -43,7 +43,7 @@ def resultados():
     return index.resultados(restaurantes, user_id)
 
 if __name__ == "__main__":
-    app.run(debug= True, port=5001)
+    app.run(debug= True, host='0.0.0.0', port=5003)
 
 
 session.close()

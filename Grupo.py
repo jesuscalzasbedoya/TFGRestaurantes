@@ -27,3 +27,14 @@ class Grupo:
         self.session.run(query, listaUsuarios = self.listaUsuarios)
         query = "MATCH (g:Grupo {grupo_id: '" + self.grupo_id + "'})-[:GReviews]->(rrev:Restaurante) WITH g, collect(rrev.business_id) AS restaurantesRevision MATCH (s:Usuario)-[:Reviews]->(r:Restaurante) WHERE s.user_id IN $listaUsuarios AND NOT r.business_id IN restaurantesRevision MERGE (g)-[:GDescartados]->(r)"
         self.session.run(query, listaUsuarios = self.listaUsuarios)
+
+    def obtenerRestaurantes(self):
+        restaurantes = []
+        query = "MATCH (g:Grupo {grupo_id: '" + self.grupo_id + "'})-[:GReviews]->(rrev:Restaurante) RETURN rrev.business_id as restaurante_id, rrev.city as ciudad"
+        result = self.session.run(query)
+        while result.peek():
+            record = result.__next__()
+            id = record["restaurante_id"]
+            ciudad = record["ciudad"]
+            restaurantes.append((id, ciudad))
+        return restaurantes

@@ -12,8 +12,8 @@ def obtenerAmigos (user_id, session):
     amigos = mainCodigo.obtenerAmigos(user_id, session)
     return amigos
 
-def obtenerCiudades(session):
-    ciudades = mainCodigo.obtenerCiudades(session)
+def obtenerCiudades(user_id, session):
+    ciudades = mainCodigo.obtenerCiudades(user_id, session)
     return ciudades
 
 def obtenerRestaurantes(amigos, user_id, ciudad, session):

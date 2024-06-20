@@ -1,5 +1,7 @@
 import math
 
+from Restaurante import Restaurante
+
 class Algoritmo:
 
     def __init__(self, session):
